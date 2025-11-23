@@ -10,12 +10,18 @@ public class ApplicationDbContext : DbContext
     {
     }
 
-    // public DbSet<User> Users { get; set; } = null!;
-    // public DbSet<UserAttribute> UserAttributes { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<UserAttribute> UserAttributes { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Relacje i konfiguracja – zrobimy w Etapie 3
+        
+        modelBuilder.Entity<UserAttribute>()
+            .HasOne(ua => ua.User)
+            .WithMany(u => u.Attributes)
+            .HasForeignKey(ua => ua.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         base.OnModelCreating(modelBuilder);
     }
 }
