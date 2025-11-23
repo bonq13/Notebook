@@ -1,0 +1,20 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+*.csproj.user
+*.user
+
+# Rider
+.idea/
+*.iml
+
+# Build
+[Dd]ebug/
+[Rr]elease/
+
+# macOS / Windows
+.DS_Store
+Thumbs.db
