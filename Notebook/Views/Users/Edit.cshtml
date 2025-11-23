@@ -1,0 +1,11 @@
+@model Notebook.ViewModels.UserEditViewModel
+
+@{
+    ViewData["Title"] = Model.Id == null ? "Dodaj użytkownika" : "Edytuj użytkownika";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+
+    <partial name="_EditFormPartial" model="Model" />
+</div>
