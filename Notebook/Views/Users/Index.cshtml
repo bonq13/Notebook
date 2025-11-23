@@ -8,10 +8,15 @@
     <h1 class="mb-4">Notatnik użytkowników</h1>
 
     <p>
-        <a asp-action="Create" class="btn btn-success btn-lg">
+        <a asp-action="Create" class="btn btn-success btn-lg me-3">
             Dodaj użytkownika
         </a>
+        <a asp-action="Report" class="btn btn-outline-primary btn-lg">
+            Pobierz raport CSV
+        </a>
     </p>
+    
+    
 
     @if (!Model.Any())
     {
@@ -63,8 +68,13 @@
                             </td>
                             <td>
                                 <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-sm btn-primary">Edytuj</a>
-                                <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-sm btn-danger" 
-                                   onclick="return confirm('Na pewno usunąć?')">Usuń</a>
+                                <form asp-action="Delete" asp-route-id="@user.Id" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Na pewno usunąć użytkownika @user.FirstName @user.LastName?')">
+                                        Usuń
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     }

@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Notebook.Data;
@@ -156,5 +157,42 @@ public class UsersController : Controller
         }
 
         return RedirectToAction(nameof(Index));
+    }
+    
+    
+    public async Task<IActionResult> Report()
+    {
+        var users = await _context.Users
+            .AsNoTracking()
+            .Include(u => u.Attributes)
+            .OrderBy(u => u.LastName)
+            .ThenBy(u => u.FirstName)
+            .ToListAsync();
+
+        var csvLines = new List<string>
+        {
+            "Tytuł;Imię;Nazwisko;Data urodzenia;Wiek;Płeć"
+        };
+
+        foreach (var user in users)
+        {
+            var age = DateTime.Today.Year - user.DateOfBirth.Year;
+            if (user.DateOfBirth.Date > DateTime.Today.AddYears(-age)) age--;
+
+            var title = user.Gender == Gender.Male ? "Pan" : "Pani";
+            var gender = user.Gender == Gender.Male ? "Mężczyzna" : "Kobieta";
+
+            var line = $"{title};{user.FirstName};{user.LastName};" +
+                       $"{user.DateOfBirth:yyyy-MM-dd};{age};{gender}";
+
+            csvLines.Add(line);
+        }
+
+        var csvContent = string.Join("\r\n", csvLines);
+        var bytes = Encoding.UTF8.GetBytes(csvContent);
+        
+        var fileName = $"{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+
+        return File(bytes, "text/csv", fileName);
     }
 }
